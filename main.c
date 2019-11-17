@@ -13,7 +13,7 @@ void printfiles(char * dir, int offset){
   while(file){
     struct stat filestats;
     stat(file->d_name,&filestats);
-    if(file->d_type==4){
+    if(file->d_type==4 && strcmp(file->d_name,".")!=0 && strcmp(file->d_name,"..")!=0){
       int i;
       for(i=0;i<offset;i++){
         printf(" ");
@@ -31,7 +31,7 @@ void printfiles(char * dir, int offset){
     struct stat filestats;
     stat(file->d_name,&filestats);
     if(file->d_type!=4){
-      printf("nf %s %ldB\n",file->d_name,filestats.st_size);
+      printf("nf %s %lldB\n",file->d_name,filestats.st_size);
       totalSize+=filestats.st_size;
     }
     file = readdir(x);
