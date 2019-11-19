@@ -4,15 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <errno.h>
 #include <sys/types.h>
 
-
-
-int printfiles(char * dir, int offset){
+long printfiles(char * dir, int offset){
   DIR* x = opendir(dir);
   struct dirent * file = readdir(x);
-  int totalSize=0;
-  int mySize = 0;
+  long totalSize=0;
+  long mySize = 0;
   while(file){
     struct stat filestats;
     stat(file->d_name,&filestats);
@@ -51,7 +50,7 @@ int printfiles(char * dir, int offset){
     file = readdir(x);
   }
   if(offset==0){
-    printf("Summary Statistics \nTotal Dir Size %dB \nTotal Dir Size including subdirs %dB \n",mySize,totalSize);
+    printf("Summary Statistics \nTotal Dir Size %ldB \nTotal Dir Size including subdirs %ldB \n",mySize,totalSize);
   }
   return totalSize;
   //opendir returns a pointer to a directory stream (DIR *) this is a struct
@@ -60,15 +59,20 @@ int printfiles(char * dir, int offset){
 }
 int main(int argc, char *argv[]){
   //argc is the number of arguments
-  if(argc == 1){
+  if(argc < 2){
     printf("Please specify a directory \n");
-    char * directString;
-    int limit=4096;
-    fgets(directString, limit, stdin);
-    printfiles(directString,0);
+    //char * directString;
+    //int limit=4096;
+    //printfiles(directString,0);
   }
   else{
-      printfiles(argv[1],0);
+      opendir(argv[1]);
+      if(errno==0){
+        printfiles(argv[1],0);
+      }
+      else{
+        printf("%s\n",strerror(errno));
+      }
   }
 
   return 0;
