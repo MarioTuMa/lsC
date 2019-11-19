@@ -61,9 +61,18 @@ int main(int argc, char *argv[]){
   //argc is the number of arguments
   if(argc < 2){
     printf("Please specify a directory \n");
-    //char * directString;
-    //int limit=4096;
-    //printfiles(directString,0);
+    char directString[4096];
+    int limit=4096;
+    fgets(directString, limit, stdin);
+    //gets rid of newline
+    directString[strlen(directString)-1]=0;
+    opendir(directString);
+    if(errno==0){
+      printfiles(directString,0);
+    }
+    else{
+      printf("%s\n",strerror(errno));
+    }
   }
   else{
       opendir(argv[1]);
