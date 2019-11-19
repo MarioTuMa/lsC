@@ -6,6 +6,8 @@
 #include <time.h>
 #include <sys/types.h>
 
+
+
 int printfiles(char * dir, int offset){
   DIR* x = opendir(dir);
   struct dirent * file = readdir(x);
@@ -42,7 +44,7 @@ int printfiles(char * dir, int offset){
       for(i=0;i<offset;i++){
         printf("\t");
       }
-      printf("nf %s %lldB\n",file->d_name,filestats.st_size);
+      printf("nf %s %ldB\n",file->d_name,filestats.st_size);
       totalSize+=filestats.st_size;
       mySize+=filestats.st_size;
     }
@@ -56,7 +58,18 @@ int printfiles(char * dir, int offset){
   //readdir returns gives the next entry in the list
 
 }
-int main(){
-  printfiles(".",0);
+int main(int argc, char *argv[]){
+  //argc is the number of arguments
+  if(argc == 1){
+    printf("Please specify a directory \n");
+    char * directString;
+    int limit=4096;
+    fgets(directString, limit, stdin);
+    printfiles(directString,0);
+  }
+  else{
+      printfiles(argv[1],0);
+  }
+
   return 0;
 }
